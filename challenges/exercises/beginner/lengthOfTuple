@@ -1,0 +1,23 @@
+// @errors: 2344
+type Expect<T extends true> = T;
+type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y
+  ? 1
+  : 2
+  ? true
+  : false;
+
+type NotEqual<X, Y> = true extends Equal<X, Y> ? false : true;
+
+// ---cut---
+
+// Implement this type
+type LengthOfTuple<T> = T extends readonly any[] ? T["length"] : never;
+
+// Tests
+const Fruits = ["cherry", "banana"] as const;
+type cases = [
+  Expect<Equal<LengthOfTuple<[1, 2, 3]>, 3>>,
+  Expect<NotEqual<LengthOfTuple<[1, 2, 3]>, 2>>,
+  Expect<Equal<LengthOfTuple<typeof Fruits>, 2>>,
+  Expect<Equal<LengthOfTuple<[]>, 0>>
+];
